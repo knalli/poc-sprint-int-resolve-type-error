@@ -1,4 +1,4 @@
-= Demo project for type resolving error
+# Demo project for type resolving error
 
 For spring-integration 5.2.x:
 ```
