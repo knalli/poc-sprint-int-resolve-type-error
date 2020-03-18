@@ -22,6 +22,8 @@
     <modules>
         <module>incoming</module>
         <module>outgoing</module>
+        <module>gateout</module>
+        <module>gatein</module>
     </modules>
 
 
