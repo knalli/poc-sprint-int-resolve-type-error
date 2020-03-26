@@ -23,7 +23,6 @@ import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.dsl.Transformers;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.json.ObjectToJsonTransformer;
-import org.springframework.integration.mapping.support.JsonHeaders;
 import org.springframework.integration.support.json.Jackson2JsonObjectMapper;
 import org.springframework.integration.support.json.JsonObjectMapper;
 import org.springframework.messaging.MessageChannel;
@@ -119,7 +118,7 @@ public class GateoutMain {
                 .transform(Transformers.toJson(objectMapper, ObjectToJsonTransformer.ResultType.STRING))
                 .log(LoggingHandler.Level.TRACE, LoggerFactory.getLogger(GateoutMain.class).getName())
                 .handle(Amqp.outboundGateway(messageAmqpTemplate())
-                            //.mappedReplyHeaders("!json_*")
+                            .mappedReplyHeaders("!json_*", "*")
                             .routingKey(queueName))
                 .transform(Transformers.fromJson(GateoutMessage.class, objectMapper))
                 .channel(messageReplyChannel())

@@ -18,7 +18,6 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.Transformers;
 import org.springframework.integration.handler.LoggingHandler;
-import org.springframework.integration.mapping.support.JsonHeaders;
 import org.springframework.integration.support.json.Jackson2JsonObjectMapper;
 import org.springframework.integration.support.json.JsonObjectMapper;
 
@@ -78,13 +77,10 @@ public class GateinMain {
     @Bean
     public IntegrationFlow incomingMessageFlow() {
         return IntegrationFlows.from(Amqp.inboundGateway(connectionFactory, queueName)
-                                         //.mappedRequestHeaders("!json_*")
+                                         .mappedRequestHeaders("!json_*", "*")
                                          .configureContainer(c -> c.defaultRequeueRejected(false))
                                     )
                                .log(LoggingHandler.Level.TRACE, LoggerFactory.getLogger(GateinMain.class).getName())
-                               // ignore existing type definitions
-                               .headerFilter(JsonHeaders.RESOLVABLE_TYPE, JsonHeaders.TYPE_ID)
-                               //.headerFilter("!json_*")
                                .transform(Transformers.fromJson(GateinMessage.class, objectMapper))
                                .handle(messageWorker())
                                .transform(Transformers.toJson(objectMapper))
