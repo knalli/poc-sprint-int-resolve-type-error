@@ -13,7 +13,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.amqp.dsl.Amqp;
-import org.springframework.integration.amqp.support.DefaultAmqpHeaderMapper;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
@@ -24,7 +23,6 @@ import org.springframework.integration.support.json.Jackson2JsonObjectMapper;
 import org.springframework.integration.support.json.JsonObjectMapper;
 
 import javax.annotation.PostConstruct;
-import java.util.function.Consumer;
 
 @SpringBootApplication
 @EnableIntegration
@@ -80,7 +78,6 @@ public class GateinMain {
     @Bean
     public IntegrationFlow incomingMessageFlow() {
         return IntegrationFlows.from(Amqp.inboundGateway(connectionFactory, queueName)
-                                         //.headerMapper(new NoRequestHeadersAmqpHeaderMapper())
                                          //.mappedRequestHeaders("!json_*")
                                          .configureContainer(c -> c.defaultRequeueRejected(false))
                                     )
@@ -97,16 +94,6 @@ public class GateinMain {
     @Bean
     public Worker messageWorker() {
         return new WorkerImpl();
-    }
-
-
-    // Workaround ignoring incoming headers https://github.com/spring-projects/spring-integration/issues/3223
-    private static class NoRequestHeadersAmqpHeaderMapper extends DefaultAmqpHeaderMapper {
-
-        protected NoRequestHeadersAmqpHeaderMapper() {
-            super(null, null);
-            setRequestHeaderNames("!json_*");
-        }
     }
 
 }

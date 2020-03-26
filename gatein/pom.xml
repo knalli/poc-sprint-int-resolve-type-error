@@ -14,9 +14,7 @@
     <properties>
         <java.version>13</java.version>
         <!-- 2.2.4.RELEASE is default by spring-boot 2.2.5.RELEASE -->
-        <!--
-        <spring-integration1.version>5.2.3.RELEASE</spring-integration1.version>
-        -->
+        <spring-integration.version>5.2.5.RELEASE</spring-integration.version>
     </properties>
 
     <dependencies>
